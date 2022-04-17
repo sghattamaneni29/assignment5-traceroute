@@ -1,3 +1,4 @@
+import socket
 from socket import *
 import os
 import sys
@@ -107,17 +108,22 @@ def get_route(hostname):
                 header = recvPacket[20:28]
                 types, code, checksum, ID, seq = struct.unpack("bbHHh", header)
                 bytes = struct.calcsize("d")
+
                 if types == 11:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
+                    #tracelist1.append([" %d, %.0fms, %s" % (ttl, (timeReceived - t) * 1000, addr[0])])
                     tracelist2.append(tracelist1)
+
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
+                    #tracelist1.append([" %d, %.0fms, %s" % (ttl, (timeReceived - t) * 1000, addr[0])])
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(destAddr[0])])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", destAddr[0]])
+                    #tracelist1.append([" %d, %.0fms, %s" % (ttl, (timeReceived - t) * 1000, destAddr[0])])
                     tracelist2.append(tracelist1)
                     # print(tracelist2)
                     # print(tracelist1)
@@ -129,6 +135,7 @@ def get_route(hostname):
             finally:
                 mySocket.close()
                 break
+    # print(tracelist2)
     return tracelist2
 
 if __name__ == '__main__':
