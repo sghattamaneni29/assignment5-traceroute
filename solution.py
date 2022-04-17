@@ -111,19 +111,17 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
-                    return tracelist2
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
-                    return tracelist2
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(addr[0])])
                     tracelist2.append(tracelist1)
                     # print(tracelist2)
                     # print(tracelist1)
-                    return tracelist2
+
                 else:
                     tracelist1.append("error")
                     tracelist2.append(tracelist1)
@@ -131,7 +129,7 @@ def get_route(hostname):
             finally:
                 mySocket.close()
                 break
-
+    return tracelist2
 
 if __name__ == '__main__':
     get_route("google.co.il")
