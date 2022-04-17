@@ -6,7 +6,7 @@ import time
 import select
 
 ICMP_ECHO_REQUEST = 8
-MAX_HOPS = 15
+MAX_HOPS = 30
 TIMEOUT = 2.0
 TRIES = 1
 
@@ -111,10 +111,12 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
+                    return tracelist2
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
+                    return tracelist2
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(addr[0])])
@@ -124,7 +126,8 @@ def get_route(hostname):
                     return tracelist2
                 else:
                     tracelist1.append("error")
-                    return tracelist1
+                    tracelist2.append(tracelist1)
+                    return tracelist2
             finally:
                 mySocket.close()
                 break
