@@ -117,7 +117,7 @@ def get_route(hostname):
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(addr[0])])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(destAddr[0])])
                     tracelist2.append(tracelist1)
                     # print(tracelist2)
                     # print(tracelist1)
