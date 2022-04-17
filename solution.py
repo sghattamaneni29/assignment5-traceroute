@@ -123,7 +123,7 @@ def get_route(hostname):
                      return tracelist2
                 else:
                     tracelist1.append("error")
-                    return
+                    return tracelist1
             finally:
                     mySocket.close()
                     break
