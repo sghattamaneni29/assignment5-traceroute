@@ -98,6 +98,7 @@ def get_route(hostname):
                 if timeLeft <= 0:
                     tracelist1.append(" * * * Request timed out in time left!")
                     tracelist2.append(tracelist1)
+                    return tracelist2
             except timeout:
                 continue
             else:
@@ -107,22 +108,22 @@ def get_route(hostname):
                 bytes = struct.calcsize("d")
                 if types == 11:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
                 elif types == 0:
-
                      timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                     tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", gethostbyaddr(destAddr[0])])
+                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", gethostbyaddr(destAddr[0])])
                      tracelist2.append(tracelist1)
                      #print(tracelist2)
                      #print(tracelist1)
                      return tracelist2
                 else:
                     tracelist1.append("error")
+                    return
             finally:
                     mySocket.close()
                     break
