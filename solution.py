@@ -112,16 +112,16 @@ def get_route(hostname):
 
                 if types == 11:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], gethostbyaddr(addr[0])[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
 
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], gethostbyaddr(addr[0])[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", destAddr, gethostbyaddr(addr[0])[0] ])
+                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", destAddr ])
                     tracelist2.append(tracelist1)
                     # print(tracelist2)
                     # print(tracelist1)
