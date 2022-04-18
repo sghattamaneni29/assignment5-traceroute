@@ -71,7 +71,7 @@ def build_packet():
 
 def get_route(hostname):
     destAddr1 = gethostbyname(hostname)
-
+    #print(destAddr1)
     timeLeft = TIMEOUT
     tracelist1 = []  # This is your list to use when iterating through each trace
     tracelist2 = []  # This is your list to contain all traces
@@ -85,7 +85,7 @@ def get_route(hostname):
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
-                mySocket.sendto(d, (destAddr1, 0))
+                mySocket.sendto(d, (hostname, 0))
                 t = time.time()
                 startedSelect = time.time()
                 whatReady = select.select([mySocket], [], [], timeLeft)
