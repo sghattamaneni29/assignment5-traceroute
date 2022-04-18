@@ -95,7 +95,7 @@ def get_route(hostname):
                     tracelist2.add(tracelist1)
                     continue
                 recvPacket, addr = mySocket.recvfrom(1024)
-                #print(gethostbyaddr(addr[0])[0])
+                print(gethostbyaddr(addr[0])[2])
                 timeReceived = time.time()
                 timeLeft = timeLeft - howLongInSelect
                 if timeLeft <= 0:
@@ -121,7 +121,7 @@ def get_route(hostname):
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", gethostbyaddr(addr[0])[0],  destAddr1])
+                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", gethostbyaddr(addr[0])[2],  destAddr1])
                     tracelist2.append(tracelist1)
                     # print(tracelist2)
                     # print(tracelist1)
