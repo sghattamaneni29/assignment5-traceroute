@@ -70,12 +70,12 @@ def build_packet():
     return packet
 
 def get_route(hostname):
-    destAddr1 = gethostbyname(hostname)
     timeLeft = TIMEOUT
     tracelist1 = []  # This is your list to use when iterating through each trace
     tracelist2 = []  # This is your list to contain all traces
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
+            destAddr = gethostbyname(hostname)
             icmp = getprotobyname('icmp')
             # Make a raw socket named mySocket
             mySocket = socket(AF_INET, SOCK_RAW, icmp)
@@ -89,36 +89,37 @@ def get_route(hostname):
                 whatReady = select.select([mySocket], [], [], timeLeft)
                 howLongInSelect = (time.time() - startedSelect)
                 if whatReady[0] == []:  # Timeout
-                    tracelist1.append(" * * * Request timed out in select!")
+                    tracelist1.append("* * * Request timed out.")
                     tracelist2.add(tracelist1)
                     continue
                 recvPacket, addr = mySocket.recvfrom(1024)
+                destAddr = addr
                 timeReceived = time.time()
                 timeLeft = timeLeft - howLongInSelect
                 if timeLeft <= 0:
-                    tracelist1.append(" * * * Request timed out in time left!")
+                    tracelist1.append("* * * Request timed out.")
                     tracelist2.append(tracelist1)
                     return tracelist2
             except timeout:
                 continue
             else:
-                #destAddr = addr
+
                 header = recvPacket[20:28]
                 types, code, checksum, ID, seq = struct.unpack("bbHHh", header)
                 bytes = struct.calcsize("d")
 
                 if types == 11:
-                    #timeSent = struct.unpack("d", recvPacket[28:36])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
 
                 elif types == 3:
-                    #timeSent = struct.unpack("d", recvPacket[28:36])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
                     tracelist2.append(tracelist1)
                 elif types == 0:
-                    timeSent = struct.unpack("d", recvPacket[28:36])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", destAddr1, gethostbyaddr(addr[0])[0] ])
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
+                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], gethostbyaddr(destAddr[0])])
                     tracelist2.append(tracelist1)
 
                 else:
