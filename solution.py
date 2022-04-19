@@ -70,6 +70,7 @@ def build_packet():
     return packet
 
 def get_route(hostname):
+    destAddr1 = gethostbyname(hostname)
     timeLeft = TIMEOUT
     tracelist1 = []  # This is your list to use when iterating through each trace
     tracelist2 = []  # This is your list to contain all traces
@@ -119,7 +120,7 @@ def get_route(hostname):
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], gethostbyaddr(destAddr[0])])
+                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", destAddr1])
                     tracelist2.append(tracelist1)
 
                 else:
@@ -129,7 +130,7 @@ def get_route(hostname):
             finally:
                 mySocket.close()
                 break
-    #print(tracelist2)
+    # print(tracelist2)
     return tracelist2
 
 if __name__ == '__main__':
