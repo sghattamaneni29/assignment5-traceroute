@@ -72,7 +72,7 @@ def build_packet():
 def get_route(hostname):
 
     timeLeft = TIMEOUT
-    tracelist1 = []  # This is your list to use when iterating through each trace
+    #tracelist1 = []  # This is your list to use when iterating through each trace
     tracelist2 = []  # This is your list to contain all traces
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
@@ -113,17 +113,31 @@ def get_route(hostname):
                     Hostname = "hostname not returnable"
                 if types == 11:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
+                    #tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
+                    tracelist1.append(str(ttl))
+                    tracelist1.append(str(round((timeReceived - t) * 1000)) + "ms")
+                    tracelist1.append(str(addr[0]))
+                    tracelist1.append(str(Hostname))
                     tracelist2.append(tracelist1)
-
+                    print(tracelist2)
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
+                    #tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
+                    tracelist1.append(str(ttl))
+                    tracelist1.append(str(round((timeReceived - t) * 1000)) + "ms")
+                    tracelist1.append(str(addr[0]))
+                    tracelist1.append(str(Hostname))
                     tracelist2.append(tracelist1)
+                    print(tracelist2)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], Hostname])
+                    #tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], Hostname])
+                    tracelist1.append(str(ttl))
+                    tracelist1.append(str(round((timeReceived - t) * 1000)) + "ms")
+                    tracelist1.append(str(addr[0]))
+                    tracelist1.append(str(Hostname))
                     tracelist2.append(tracelist1)
+                    print(tracelist2)
                     return tracelist2
 
                 else:
