@@ -70,7 +70,7 @@ def build_packet():
     return packet
 
 def get_route(hostname):
-    destAddr1 = gethostbyname(hostname)
+    #destAddr1 = gethostbyname(hostname)
     timeLeft = TIMEOUT
     tracelist1 = []  # This is your list to use when iterating through each trace
     tracelist2 = []  # This is your list to contain all traces
@@ -92,7 +92,7 @@ def get_route(hostname):
                 if whatReady[0] == []:  # Timeout
                     tracelist1.append("* * * Request timed out.")
                     tracelist2.add(tracelist1)
-                    continue
+
                 recvPacket, addr = mySocket.recvfrom(1024)
                 destAddr = addr
                 timeReceived = time.time()
@@ -108,29 +108,30 @@ def get_route(hostname):
                 header = recvPacket[20:28]
                 types, code, checksum, ID, seq = struct.unpack("bbHHh", header)
                 bytes = struct.calcsize("d")
-
+                try:
+                    Hostname = gethostbyaddr(addr[0])[0]
+                except herror as msg:
+                    Hostname = "(hostname not returnable:" + str(msg) + ")"
                 if types == 11:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
                     tracelist2.append(tracelist1)
 
                 elif types == 3:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - t) * 1000)) + "ms", addr[0], Hostname])
                     tracelist2.append(tracelist1)
                 elif types == 0:
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
-                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], gethostbyaddr(destAddr1)[0]])
+                    tracelist1.append([str(ttl), str(round((timeReceived - timeSent) * 1000)) + "ms", addr[0], Hostname])
                     tracelist2.append(tracelist1)
 
                 else:
-                    tracelist1.append("error")
-                    tracelist2.append(tracelist1)
-                    return tracelist2
+                    print("error")
             finally:
                 mySocket.close()
                 break
-    #print(tracelist2)
+    print(tracelist2)
     return tracelist2
 
 if __name__ == '__main__':
